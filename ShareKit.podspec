@@ -33,12 +33,12 @@ Pod::Spec.new do |s|
     reachability.requires_arc = false
   end
 
-s.subspec 'Evernote' do |evernote|
+  s.subspec 'Evernote' do |evernote|
     evernote.source_files = 'Classes/ShareKit/Sharers/Services/Evernote/**/*.{h,m}'
     evernote.dependency 'Evernote-SDK-iOS', '~> 1.3.1'
     evernote.dependency 'ShareKit/Core'
     evernote.libraries = 'xml2'
-evernote.xcconfig = { 'HEADER_SEARCH_PATHS' => '$(SDKROOT)/usr/include/libxml2' }
+    evernote.xcconfig = { 'HEADER_SEARCH_PATHS' => '$(SDKROOT)/usr/include/libxml2' }
   end
 
   s.subspec 'Facebook' do |facebook|
@@ -194,28 +194,37 @@ evernote.xcconfig = { 'HEADER_SEARCH_PATHS' => '$(SDKROOT)/usr/include/libxml2' 
   end
 
   s.subspec 'Work' do |work|
-    work.dependency 'ShareKit/GooglePlusLean'
     work.dependency 'ShareKit/Facebook'
-    work.dependency 'ShareKit/Foursquare'
+    # work.dependency 'ShareKit/Flickr'
+    # work.dependency 'ShareKit/Foursquare'
     work.dependency 'ShareKit/Evernote'
     work.dependency 'ShareKit/Delicious'
+
     work.dependency 'ShareKit/Hatena'
     work.dependency 'ShareKit/Kippt'
     work.dependency 'ShareKit/Pocket'
     work.dependency 'ShareKit/Diigo'
+    # work.dependency 'ShareKit/Dropbox'
+
     work.dependency 'ShareKit/Instapaper'
     work.dependency 'ShareKit/Pocket'
     work.dependency 'ShareKit/LinkedIn'
     work.dependency 'ShareKit/Pinboard'
     work.dependency 'ShareKit/Readability'
+
     work.dependency 'ShareKit/Tumblr'
     work.dependency 'ShareKit/Twitter'
     work.dependency 'ShareKit/SinaWeibo'
     work.dependency 'ShareKit/Vkontakte'
     work.dependency 'ShareKit/Instagram'
+
     work.dependency 'ShareKit/Imgur'
+    # work.dependency 'ShareKit/Pinterest'
     work.dependency 'ShareKit/WhatsApp'
     work.dependency 'ShareKit/OneNote'
+    # work.dependency 'ShareKit/YouTube'
+
+    work.dependency 'ShareKit/GooglePlusLean'
   end
 
 end
