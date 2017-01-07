@@ -195,6 +195,12 @@ Pod::Spec.new do |s|
     googlepluslean.dependency 'ShareKit/Core'
   end
 
+  s.subspec 'GooglePlusBasic' do |gpbasic|
+    gpbasic.source_files = 'Classes/ShareKit/Sharers/Services/GooglePlusBasic/**/*.{h,m}'
+    gpbasic.framework = 'SafariServices'
+    gpbasic.dependency 'ShareKit/Core'
+  end
+
   s.subspec 'Work' do |work|
     work.dependency 'ShareKit/Facebook'
     # work.dependency 'ShareKit/Flickr'
@@ -226,7 +232,7 @@ Pod::Spec.new do |s|
     work.dependency 'ShareKit/OneNote'
     # work.dependency 'ShareKit/YouTube'
 
-    work.dependency 'ShareKit/GooglePlusLean'
+    work.dependency 'ShareKit/GooglePlusBasic'
   end
 
 end
