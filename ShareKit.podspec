@@ -17,6 +17,8 @@ Pod::Spec.new do |s|
   s.subspec 'Core' do |core|
     core.resource_bundle = {'ShareKit' => ['Classes/ShareKit/Core/SHKSharers.plist', 'Classes/ShareKit/Localization/*.lproj', 'Classes/ShareKit/*.png']}
     core.source_files  = 'Classes/ShareKit/{Configuration,Core,UI}/**/*.{h,m,c}', 'Classes/ShareKit/Sharers/Actions/**/*.{h,m,c}', 'Classes/ShareKit/Core NoARC/**/*.{h,m,c}'
+    # exclude 'Save to Album' since iOS 10 requires to declare NSPhotoLibraryUsageDescription key
+    core.exclude_files = 'Classes/ShareKit/Sharers/Actions/Save to Album/*.{h,m}'
     core.requires_arc = 'Classes/ShareKit/{Configuration,Core,UI}/**/*.{h,m,c}', 'Classes/ShareKit/Sharers/Actions/**/*.{h,m,c}'
     core.frameworks    = 'SystemConfiguration', 'Security', 'MessageUI', 'AVFoundation', 'MobileCoreServices', 'CoreMedia', 'Social'
     core.weak_frameworks = 'SafariServices' #for Add to Safari reading list
@@ -216,7 +218,7 @@ Pod::Spec.new do |s|
     work.dependency 'ShareKit/Twitter'
     work.dependency 'ShareKit/SinaWeibo'
     work.dependency 'ShareKit/Vkontakte'
-    work.dependency 'ShareKit/Instagram'
+    # work.dependency 'ShareKit/Instagram'
 
     work.dependency 'ShareKit/Imgur'
     # work.dependency 'ShareKit/Pinterest'
