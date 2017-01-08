@@ -11,7 +11,7 @@
 #import "SharersCommonHeaders.h"
 
 #import <GooglePlus/GPPSignIn.h>
-#import "GTLPlusPerson.h"
+#import <GoogleOpenSource/GTLPlusPerson.h>
 
 #define ALLOWED_VIDEO_SIZE 1037741824 //1GB in Bytes
 #define ALLOWED_IMAGE_SIZE 37748736 //36MB in Bytes

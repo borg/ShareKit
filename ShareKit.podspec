@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name          = 'ShareKit'
-  s.version       = '5.0.0'
+  s.version       = '5.0.1'
   s.platform      = :ios, '7.0'
   s.summary       = 'Drop in sharing features for all iPhone and iPad apps.'
   s.homepage      = 'http://getsharekit.com/'
@@ -11,10 +11,14 @@ Pod::Spec.new do |s|
                       :text => %Q|Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:\n| +
                                %Q|The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.\n| +
                                %Q|THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE| }
-  
+
+  s.default_subspec = 'Work'
+
   s.subspec 'Core' do |core|
     core.resource_bundle = {'ShareKit' => ['Classes/ShareKit/Core/SHKSharers.plist', 'Classes/ShareKit/Localization/*.lproj', 'Classes/ShareKit/*.png']}
     core.source_files  = 'Classes/ShareKit/{Configuration,Core,UI}/**/*.{h,m,c}', 'Classes/ShareKit/Sharers/Actions/**/*.{h,m,c}', 'Classes/ShareKit/Core NoARC/**/*.{h,m,c}'
+    # exclude 'Save to Album' since iOS 10 requires to declare NSPhotoLibraryUsageDescription key
+    core.exclude_files = 'Classes/ShareKit/Sharers/Actions/Save to Album/*.{h,m}'
     core.requires_arc = 'Classes/ShareKit/{Configuration,Core,UI}/**/*.{h,m,c}', 'Classes/ShareKit/Sharers/Actions/**/*.{h,m,c}'
     core.frameworks    = 'SystemConfiguration', 'Security', 'MessageUI', 'AVFoundation', 'MobileCoreServices', 'CoreMedia', 'Social'
     core.weak_frameworks = 'SafariServices' #for Add to Safari reading list
@@ -31,12 +35,12 @@ Pod::Spec.new do |s|
     reachability.requires_arc = false
   end
 
-s.subspec 'Evernote' do |evernote|
+  s.subspec 'Evernote' do |evernote|
     evernote.source_files = 'Classes/ShareKit/Sharers/Services/Evernote/**/*.{h,m}'
     evernote.dependency 'Evernote-SDK-iOS', '~> 1.3.1'
     evernote.dependency 'ShareKit/Core'
     evernote.libraries = 'xml2'
-evernote.xcconfig = { 'HEADER_SEARCH_PATHS' => '$(SDKROOT)/usr/include/libxml2' }
+    evernote.xcconfig = { 'HEADER_SEARCH_PATHS' => '$(SDKROOT)/usr/include/libxml2' }
   end
 
   s.subspec 'Facebook' do |facebook|
@@ -87,7 +91,7 @@ evernote.xcconfig = { 'HEADER_SEARCH_PATHS' => '$(SDKROOT)/usr/include/libxml2' 
     diigo.source_files = 'Classes/ShareKit/Sharers/Services/Diigo/**/*.{h,m}'
     diigo.dependency 'ShareKit/Core'
   end
-  
+
   s.subspec 'Dropbox' do |dropbox|
     dropbox.source_files = 'Classes/ShareKit/Sharers/Services/Dropbox/**/*.{h,m}'
     dropbox.dependency 'ShareKit/Core'
@@ -140,18 +144,18 @@ evernote.xcconfig = { 'HEADER_SEARCH_PATHS' => '$(SDKROOT)/usr/include/libxml2' 
     instagram.source_files = 'Classes/ShareKit/Sharers/Services/Instagram/**/*.{h,m}'
     instagram.dependency 'ShareKit/Core'
   end
-  
+
   s.subspec 'Imgur' do |imgur|
     imgur.source_files = 'Classes/ShareKit/Sharers/Services/Imgur/**/*.{h,m}'
     imgur.dependency 'ShareKit/Core'
   end
-  
+
   #s.subspec 'Pinterest' do |pinterest|
   #  pinterest.source_files = 'Classes/ShareKit/Sharers/Services/Pinterest/**/*.{h,m}'
   #  pinterest.dependency 'PinterestSDK'
   #  pinterest.dependency 'ShareKit/Core'
   #end
-  
+
   s.subspec 'WhatsApp' do |whatsapp|
       whatsapp.source_files = 'Classes/ShareKit/Sharers/Services/WhatsApp/**/*.{h,m}'
       whatsapp.dependency 'ShareKit/Core'
@@ -179,6 +183,56 @@ evernote.xcconfig = { 'HEADER_SEARCH_PATHS' => '$(SDKROOT)/usr/include/libxml2' 
     googleplus.dependency 'GoogleAPIClient/Plus'
     googleplus.dependency 'OpenInChrome'
     googleplus.dependency 'gtm-logger'
-    end
+  end
+
+  # Notes: adding dependency GoogleAPIClient/Plus will causes missing symbol error
+  # Better way is using the matching GoogleOpenSource.framework
+  s.subspec 'GooglePlusLean' do |googlepluslean|
+    googlepluslean.source_files = 'Classes/ShareKit/Sharers/Services/Google Plus/**/*.{h,m}'
+    googlepluslean.vendored_frameworks = 'Frameworks/GooglePlus.framework', 'Frameworks/GoogleOpenSource.framework'
+    googlepluslean.resource = "Frameworks/GooglePlus.bundle"
+    googlepluslean.framework = 'AssetsLibrary', 'CoreLocation', 'CoreMotion', 'CoreGraphics', 'CoreText', 'MediaPlayer', 'Security', 'SystemConfiguration', 'AddressBook'
+    googlepluslean.dependency 'ShareKit/Core'
+  end
+
+  s.subspec 'GooglePlusBasic' do |gpbasic|
+    gpbasic.source_files = 'Classes/ShareKit/Sharers/Services/GooglePlusBasic/**/*.{h,m}'
+    gpbasic.framework = 'SafariServices'
+    gpbasic.dependency 'ShareKit/Core'
+  end
+
+  s.subspec 'Work' do |work|
+    work.dependency 'ShareKit/Facebook'
+    # work.dependency 'ShareKit/Flickr'
+    # work.dependency 'ShareKit/Foursquare'
+    work.dependency 'ShareKit/Evernote'
+    work.dependency 'ShareKit/Delicious'
+
+    work.dependency 'ShareKit/Hatena'
+    work.dependency 'ShareKit/Kippt'
+    work.dependency 'ShareKit/Pocket'
+    work.dependency 'ShareKit/Diigo'
+    # work.dependency 'ShareKit/Dropbox'
+
+    work.dependency 'ShareKit/Instapaper'
+    work.dependency 'ShareKit/Pocket'
+    work.dependency 'ShareKit/LinkedIn'
+    work.dependency 'ShareKit/Pinboard'
+    work.dependency 'ShareKit/Readability'
+
+    work.dependency 'ShareKit/Tumblr'
+    work.dependency 'ShareKit/Twitter'
+    work.dependency 'ShareKit/SinaWeibo'
+    work.dependency 'ShareKit/Vkontakte'
+    # work.dependency 'ShareKit/Instagram'
+
+    work.dependency 'ShareKit/Imgur'
+    # work.dependency 'ShareKit/Pinterest'
+    work.dependency 'ShareKit/WhatsApp'
+    work.dependency 'ShareKit/OneNote'
+    # work.dependency 'ShareKit/YouTube'
+
+    work.dependency 'ShareKit/GooglePlusBasic'
+  end
 
 end
