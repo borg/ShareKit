@@ -49,7 +49,7 @@
     // Open the URL in SFSafariViewController (iOS 9+)
     SFSafariViewController* controller = [[SFSafariViewController alloc] initWithURL:url];
     controller.delegate = self;
-    [[SHK currentHelper] showViewController:controller];
+    [[SHK currentHelper] showStandaloneViewController:controller];
   } else {
     // Open the URL in the device's browser
     [[UIApplication sharedApplication] openURL:url];
